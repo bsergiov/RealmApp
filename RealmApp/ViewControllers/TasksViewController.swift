@@ -40,6 +40,37 @@ class TasksViewController: UITableViewController {
         section == 0 ? currentTasks.count : completedTasks.count
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let task = indexPath.section == 0 ? currentTasks[indexPath.row] : completedTasks[indexPath.row]
+        
+        
+    }
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let task = indexPath.section == 0 ? currentTasks[indexPath.row] : completedTasks[indexPath.row]
+        if indexPath.section == 0 {
+            let doneAction = UIContextualAction(style: .normal, title: "Done") { _, _, isDone in
+                self.doneTask(with: task, action: true)
+                self.tableView.reloadData()
+                isDone(true)
+            }
+            doneAction.backgroundColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+            
+            return UISwipeActionsConfiguration(actions: [doneAction])
+        } else {
+            let repetAction = UIContextualAction(style: .normal, title: "Repet") { _, _, isDone in
+                self.doneTask(with: task, action: false)
+                self.tableView.reloadData()
+                isDone(true)
+            }
+            repetAction.backgroundColor = #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
+            
+            return UISwipeActionsConfiguration(actions: [repetAction])
+        }
+        
+    }
+    
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         section == 0 ? "CURRENT TASKS" : "COMPLETED TASKS"
     }
@@ -61,6 +92,7 @@ class TasksViewController: UITableViewController {
 }
 
 extension TasksViewController {
+    
     private func showAlert(with task: Task? = nil, completion: (() -> Void)? = nil) {
         let title = task != nil ? "Edit Task" : "New Task"
         
@@ -83,5 +115,9 @@ extension TasksViewController {
         
         let rowIndex = IndexPath(row: currentTasks.index(of: task) ?? 0, section: 0)
         tableView.insertRows(at: [rowIndex], with: .automatic)
+    }
+    
+    private func doneTask(with task: Task, action: Bool) {
+        StorageManager.shared.done(task, action: action)
     }
 }

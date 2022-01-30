@@ -48,6 +48,7 @@ class TaskListViewController: UITableViewController {
         content.text = taskList.name
         
         let countCurrentTask = taskList.tasks.filter { task in !task.isComplete } .count
+        
         if countCurrentTask == 0 {
             content.secondaryText = "✅"
         }else {

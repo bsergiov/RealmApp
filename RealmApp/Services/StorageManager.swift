@@ -54,6 +54,14 @@ class StorageManager {
         }
     }
     
+    func done(_ task: Task, action: Bool) {
+        write {
+            task.isComplete = action
+        }
+    }
+    
+    
+    // MARK: - Private Methods
     private func write(completion: () -> Void) {
         do {
             try realm.write {
