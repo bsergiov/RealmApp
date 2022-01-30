@@ -42,7 +42,9 @@ class TasksViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let task = indexPath.section == 0 ? currentTasks[indexPath.row] : completedTasks[indexPath.row]
-        
+        showAlert(with: task) {
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
         
     }
     
@@ -99,8 +101,9 @@ extension TasksViewController {
         let alert = UIAlertController.createAlert(withTitle: title, andMessage: "What do you want to do?")
         
         alert.action(with: task) { newValue, note in
-            if let _ = task, let _ = completion {
-                // TODO - edit task
+            if let task = task, let completion = completion {
+                StorageManager.shared.edit(task, name: newValue, note: note)
+                completion()
             } else {
                 self.saveTask(withName: newValue, andNote: note)
             }
@@ -116,6 +119,7 @@ extension TasksViewController {
         let rowIndex = IndexPath(row: currentTasks.index(of: task) ?? 0, section: 0)
         tableView.insertRows(at: [rowIndex], with: .automatic)
     }
+
     
     private func doneTask(with task: Task, action: Bool) {
         StorageManager.shared.done(task, action: action)

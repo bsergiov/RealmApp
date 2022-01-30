@@ -54,6 +54,13 @@ class StorageManager {
         }
     }
     
+    func edit(_ task: Task, name: String, note: String = "") {
+        write {
+            task.name = name
+            task.note = note
+        }
+    }
+    
     func done(_ task: Task, action: Bool) {
         write {
             task.isComplete = action
