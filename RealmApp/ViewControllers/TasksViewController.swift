@@ -51,25 +51,33 @@ class TasksViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let task = indexPath.section == 0 ? currentTasks[indexPath.row] : completedTasks[indexPath.row]
+        
+        var doneAction: UIContextualAction!
         if indexPath.section == 0 {
-            let doneAction = UIContextualAction(style: .normal, title: "Done") { _, _, isDone in
+             doneAction = UIContextualAction(style: .normal, title: "Done") { _, _, isDone in
                 self.doneTask(with: task, action: true)
                 self.tableView.reloadData()
                 isDone(true)
             }
             doneAction.backgroundColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
             
-            return UISwipeActionsConfiguration(actions: [doneAction])
         } else {
-            let repetAction = UIContextualAction(style: .normal, title: "Repet") { _, _, isDone in
+            doneAction = UIContextualAction(style: .normal, title: "Repet") { _, _, isDone in
                 self.doneTask(with: task, action: false)
                 self.tableView.reloadData()
                 isDone(true)
             }
-            repetAction.backgroundColor = #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
-            
-            return UISwipeActionsConfiguration(actions: [repetAction])
+            doneAction.backgroundColor = #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
         }
+        
+        let deleteAction = UIContextualAction(style: .normal, title: "Delete") { _, _, _ in
+            StorageManager.shared.delete(task)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            
+        }
+        deleteAction.backgroundColor = #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)
+        
+        return UISwipeActionsConfiguration(actions: [doneAction, deleteAction])
         
     }
     
