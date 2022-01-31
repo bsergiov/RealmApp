@@ -15,7 +15,7 @@ class StorageManager {
     
     private init() {}
     
-    // MARK: - Task List
+    // MARK: - Task List for db operation
     func save(_ taskLists: [TaskList]) {
         try! realm.write {
             realm.add(taskLists)
@@ -47,7 +47,7 @@ class StorageManager {
         }
     }
 
-    // MARK: - Tasks
+    // MARK: - Tasks for db operation
     func save(_ task: Task, to taskList: TaskList) {
         write {
             taskList.tasks.append(task)
@@ -72,7 +72,6 @@ class StorageManager {
             realm.delete(task)
         }
     }
-    
     
     // MARK: - Private Methods
     private func write(completion: () -> Void) {

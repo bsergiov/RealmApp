@@ -11,11 +11,14 @@ import RealmSwift
 
 class TasksViewController: UITableViewController {
     
+    // MARK: - Public Properties
     var taskList: TaskList!
     
+    // MARK: - Private Properties
     private var currentTasks: Results<Task>!
     private var completedTasks: Results<Task>!
 
+   // MARK: - Life Cicle
     override func viewDidLoad() {
         super.viewDidLoad()
         title = taskList.name
@@ -48,6 +51,21 @@ class TasksViewController: UITableViewController {
         
     }
     
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        section == 0 ? "CURRENT TASKS" : "COMPLETED TASKS"
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TasksCell", for: indexPath)
+        var content = cell.defaultContentConfiguration()
+        let task = indexPath.section == 0 ? currentTasks[indexPath.row] : completedTasks[indexPath.row]
+        content.text = task.name
+        content.secondaryText = task.note
+        cell.contentConfiguration = content
+        return cell
+    }
+    
+    // MARK: - TableView Delegate
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let task = indexPath.section == 0 ? currentTasks[indexPath.row] : completedTasks[indexPath.row]
@@ -81,28 +99,14 @@ class TasksViewController: UITableViewController {
         
     }
     
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        section == 0 ? "CURRENT TASKS" : "COMPLETED TASKS"
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TasksCell", for: indexPath)
-        var content = cell.defaultContentConfiguration()
-        let task = indexPath.section == 0 ? currentTasks[indexPath.row] : completedTasks[indexPath.row]
-        content.text = task.name
-        content.secondaryText = task.note
-        cell.contentConfiguration = content
-        return cell
-    }
-    
+    // MARK: - UI actionons
     @objc private func addButtonPressed() {
         showAlert()
     }
-
 }
 
+// MARK: - Private Methodes
 extension TasksViewController {
-    
     private func showAlert(with task: Task? = nil, completion: (() -> Void)? = nil) {
         let title = task != nil ? "Edit Task" : "New Task"
         

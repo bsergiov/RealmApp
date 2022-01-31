@@ -28,6 +28,7 @@ class TaskListViewController: UITableViewController {
         navigationItem.rightBarButtonItem = addButton
         navigationItem.leftBarButtonItem = editButtonItem
         
+        
         createTempData()
     }
     
@@ -59,7 +60,7 @@ class TaskListViewController: UITableViewController {
         return cell
     }
     
-    // MARK: - Table View Data Source
+    // MARK: - TableView Delegate
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let taskList = taskLists[indexPath.row]
         
@@ -106,7 +107,7 @@ class TaskListViewController: UITableViewController {
         }
     }
     
-    @objc private func  addButtonPressed() {
+    @objc private func addButtonPressed() {
         showAlert()
     }
     
